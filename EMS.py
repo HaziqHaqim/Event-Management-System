@@ -26,6 +26,27 @@ def clearPushed():
     location_entry.delete(0,END)
     info_entry.delete(0,END)
 
+def update_event():
+    selected_index = event_listbox.curselection()
+    if not selected_index:
+        messagebox.showwarning("Input Error", "Please select an event to update")
+        return
+    
+    name = name_entry.get()
+    phone = phone_entry.get()
+    date = date_entry.get()
+    location = location_entry.get()
+    info = info_entry.get()
+
+    if not all([name, phone, date, location, info]):
+        messagebox.showwarning("Input Error", "All fields are required")
+        return
+    
+    updated_event_info = f"{name} - {phone} - {date} - {location} - {info}"
+    event_listbox.delete(selected_index[0])
+    event_listbox.insert(selected_index[0], updated_event_info)
+    clearPushed()
+
 app=Tk()
 app.title("Event Management System")
 app.geometry("530x530")
@@ -56,11 +77,11 @@ info_entry.grid(row=5, column=1, padx=10, pady=5)
 buttonFrame = Frame(app)
 buttonFrame.grid(row=1, column=1, columnspan=3, pady=10)
 
-appButton = Button(app,text="Create",command=createPushed, width=10).grid(row=6, column=0, padx=10, pady=5)
-appButton = Button(app,text="Update",width=10).grid(row=6, column=1, padx=10, pady=5)
-appButton = Button(app,text="Clear",command=clearPushed,width=10).grid(row=6, column=2, padx=10, pady=5)
-appButton = Button(app,text="Exit",command=exitPushed,width=10).grid(row=9, column=2, padx=10, pady=5)
-appButton = Button(app,text="Delete",width=10).grid(row=9, column=0, padx=10, pady=5)
+appButton = Button(app, text="Create",command=createPushed, width=10).grid(row=6, column=0, padx=10, pady=5)
+appButton = Button(app, text="Update",command=update_event, width=10).grid(row=6, column=1, padx=10, pady=5)
+appButton = Button(app, text="Clear",command=clearPushed,width=10).grid(row=6, column=2, padx=10, pady=5)
+appButton = Button(app, text="Exit",command=exitPushed,width=10).grid(row=9, column=2, padx=10, pady=5)
+appButton = Button(app, text="Delete",width=10).grid(row=9, column=0, padx=10, pady=5)
 
 event_listbox = Listbox(app, width=60, height=13)
 event_listbox.grid(row=8, column=0, columnspan=3, padx=10, pady=10)
