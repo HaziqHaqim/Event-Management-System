@@ -58,6 +58,10 @@ app=Tk()
 app.title("Event Management System")
 app.geometry("530x530")
 
+image = PhotoImage(file="C:\GAMBAR WALLPAPER GUI PYTHON\Screenshot 2024-06-27 230131.png")
+image_label = Label(app, image=image)
+image_label.place(relheight=1, relwidth=1)
+
 appLabel = Label(app,text="UniMap Event Booking",font=("Cooper Black", 16))
 appLabel.grid(row=0, column=1, columnspan=1, padx=10, pady=10)
 
@@ -95,3 +99,4 @@ event_listbox = Listbox(app, width=60, height=13)
 event_listbox.grid(row=8, column=0, columnspan=3, padx=10, pady=10)
 
 app.mainloop()
+ 
