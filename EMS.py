@@ -47,6 +47,13 @@ def update_event():
     event_listbox.insert(selected_index[0], updated_event_info)
     clearPushed()
 
+def delete_event():
+    selected_index = event_listbox.curselection()
+    if not selected_index:
+        messagebox.showwarning("Input Error", "Please select an event to delete")
+        return
+    event_listbox.delete(selected_index[0])
+
 app=Tk()
 app.title("Event Management System")
 app.geometry("530x530")
@@ -82,9 +89,9 @@ appButton = Button(app, text="Update",command=update_event, width=10).grid(row=6
 appButton = Button(app, text="Clear",command=clearPushed,width=10).grid(row=6, column=2, padx=10, pady=5)
 appButton = Button(app, text="Exit",command=exitPushed,width=10).grid(row=9, column=2, padx=10, pady=5)
 appButton = Button(app, text="Delete",width=10).grid(row=9, column=0, padx=10, pady=5)
+appButton = Button(app, text="Delete", command=delete_event, width=10).grid(row=9, column=0, padx=10, pady=5)
 
 event_listbox = Listbox(app, width=60, height=13)
 event_listbox.grid(row=8, column=0, columnspan=3, padx=10, pady=10)
 
 app.mainloop()
-
