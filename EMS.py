@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
+from PIL import Image, ImageTk
 
 def exitPushed():
     app.destroy()
@@ -54,13 +56,36 @@ def delete_event():
         return
     event_listbox.delete(selected_index[0])
 
+def Read_event():
+    read_window = Toplevel(app)
+    read_window.title('Listed Data')
+    read_window.geometry("600x400")
+
+    table = ttk.Treeview(read_window,columns=('name','phone','date','location','info'), show= 'headings')
+    table.heading('name', text= 'Name')
+    table.heading('phone', text= 'Phone')
+    table.heading('date', text= 'Date')
+    table.heading('location', text= 'Location')
+    table.heading('info', text= 'Info')
+    table.pack(pady=20)
+    table.column('name',width=120)
+    table.column('phone',width=120)
+    table.column('date',width=120)
+    table.column('location',width=120)
+    table.column('info',width=120)
+
+    for event in event_listbox.get(0,END):
+        name, phone, date, location, info = event.split("-")
+        table.insert('', END, values=(name.strip(), phone.strip(), date.strip(), location.strip(), info.strip()))
+
 app=Tk()
 app.title("Event Management System")
 app.geometry("530x530")
 
-image = PhotoImage(file="C:\GAMBAR WALLPAPER GUI PYTHON\Screenshot 2024-06-27 230131.png")
+image = PhotoImage(file="c:\\Users\\User\\Downloads\\The-Basics-of-Visual-Programming---Blog-Image.png")
 image_label = Label(app, image=image)
 image_label.place(relheight=1, relwidth=1)
+
 
 appLabel = Label(app,text="UniMap Event Booking",font=("Cooper Black", 16))
 appLabel.grid(row=0, column=1, columnspan=1, padx=10, pady=10)
@@ -92,8 +117,8 @@ appButton = Button(app, text="Create",command=createPushed, width=10).grid(row=6
 appButton = Button(app, text="Update",command=update_event, width=10).grid(row=6, column=1, padx=10, pady=5)
 appButton = Button(app, text="Clear",command=clearPushed,width=10).grid(row=6, column=2, padx=10, pady=5)
 appButton = Button(app, text="Exit",command=exitPushed,width=10).grid(row=9, column=2, padx=10, pady=5)
-appButton = Button(app, text="Delete",width=10).grid(row=9, column=0, padx=10, pady=5)
 appButton = Button(app, text="Delete", command=delete_event, width=10).grid(row=9, column=0, padx=10, pady=5)
+appButton = Button(app, text="Read",command=Read_event,width=10).grid(row=9, column=1, padx=10, pady=5)
 
 event_listbox = Listbox(app, width=60, height=13)
 event_listbox.grid(row=8, column=0, columnspan=3, padx=10, pady=10)
