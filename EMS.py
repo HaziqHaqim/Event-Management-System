@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
-from PIL import Image, ImageTk
 
 def exitPushed():
     app.destroy()
@@ -81,11 +80,6 @@ def Read_event():
 app=Tk()
 app.title("Event Management System")
 app.geometry("530x530")
-
-image = PhotoImage(file="c:\\Users\\User\\Downloads\\The-Basics-of-Visual-Programming---Blog-Image.png")
-image_label = Label(app, image=image)
-image_label.place(relheight=1, relwidth=1)
-
 
 appLabel = Label(app,text="UniMap Event Booking",font=("Cooper Black", 16))
 appLabel.grid(row=0, column=1, columnspan=1, padx=10, pady=10)
