@@ -1,9 +1,11 @@
+import pickle
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
-from PIL import Image, ImageTk
+# from PIL import Image, ImageTk
 
 def exitPushed():
+    save_data()
     app.destroy()
 
 def createPushed():
@@ -19,6 +21,7 @@ def createPushed():
     
     event_info = f"{name} - {phone} - {date} - {location} - {info}"
     event_listbox.insert(END, event_info)
+    events.append(event_info)
     clearPushed()
 
 def clearPushed():
@@ -45,6 +48,7 @@ def update_event():
         return
     
     updated_event_info = f"{name} - {phone} - {date} - {location} - {info}"
+    events[selected_index[0]] = updated_event_info
     event_listbox.delete(selected_index)
     event_listbox.insert(selected_index, updated_event_info)
     clearPushed()
@@ -54,6 +58,7 @@ def delete_event():
     if not selected_index:
         messagebox.showwarning("Input Error", "Please select an event to delete")
         return
+    del events[selected_index[0]]
     event_listbox.delete(selected_index[0])
     clearPushed()
 
@@ -85,14 +90,14 @@ def Read_event():
     read_window.config(bg="lightblue")
     read_window.resizable(False,False)
 
-    bg_image_path = "c:\\Users\\Hakim\\Downloads\\sky.jpg"
-    bg_image = Image.open(bg_image_path)
-    bg_image = bg_image.resize((800,500),Image.LANCZOS)
-    bg_read = ImageTk.PhotoImage(bg_image)
+    #bg_image_path = "c:\\Users\\Hakim\\Downloads\\sky.jpg"
+    #bg_image = Image.open(bg_image_path)
+    #bg_image = bg_image.resize((800,500),Image.LANCZOS)
+    #bg_read = #ImageTk.PhotoImage(bg_image)
 
-    bg_label_read = Label(read_window, image=bg_read)
-    bg_label_read.place(x=0, y=0, relwidth=1, relheight=1)
-    bg_label_read.image = bg_read
+    #bg_label_read = Label(read_window, image=#bg_read)
+    #bg_label_read.place(x=0, y=0, relwidth=1, relheight=1)
+    #bg_label_read.image = #bg_read
 
     table_title = Label(read_window,text="INFORMATION",font=("Cooper Black", 16))
     table_title.grid(row=0, column=0, padx=10, pady= 10)
@@ -117,18 +122,30 @@ def Read_event():
         name, phone, date, location, info = event.split("-")
         table.insert('', END, values=(name.strip(), phone.strip(), date.strip(), location.strip(), info.strip()))   
 
+def load_data():
+    try:
+        with open("events.dat", 'rb') as f:
+            global events
+            events = pickle.load(f)
+    except FileNotFoundError:
+        events = []
+
+def save_data():
+    with open("events.dat", "wb") as f:
+        pickle.dump(events,f)
+
 app=Tk()
 app.title("Event Management System")
 app.geometry("530x530")
 app.resizable(False,False)
 
-bg_image = Image.open ('c:\\Users\\Hakim\\Documents\\canselori.jpeg')
-bg_image = bg_image.resize((530,540),Image.LANCZOS)
-bg_photo = ImageTk.PhotoImage(bg_image)
+#bg_image = Image.open ('c:\\Users\\Hakim\\Documents\\canselori.jpeg')
+#bg_image = #bg_image.resize((530,540),Image.LANCZOS)
+#bg_photo = #ImageTk.PhotoImage(bg_image)
 
-bg_label = Label(app, image=bg_photo)
-bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-bg_label.image = bg_photo
+#bg_label = Label#(app, image=#bg_photo)
+#bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+#bg_label.image = bg_photo
 
 appLabel = Label(app,text="UniMap Event Booking",font=("Cooper Black", 16))
 appLabel.grid(row=0, column=1, columnspan=1, padx=10, pady=10)
@@ -167,6 +184,11 @@ event_listbox = Listbox(app, width=60, height=13)
 event_listbox.grid(row=8, column=0, columnspan=3, padx=10, pady=10)
 event_listbox.bind('<<ListboxSelect>>', onSelect)
 event_listbox.config(bg="lightskyblue3")
+
+load_data()
+
+for event in events:
+    event_listbox.insert(END, event)
 
 app.mainloop()
  
