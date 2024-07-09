@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
+import pygame
 
 def exitPushed():
     save_data()
@@ -117,7 +118,7 @@ def Read_event():
     read_window.config(bg="lightblue")
     read_window.resizable(False,False)
 
-    bg_image_path = "C:\GAMBAR WALLPAPER GUI PYTHON\Screenshot 2024-06-27 230131.png"
+    bg_image_path = "c:\\Users\\Hakim\\Documents\\canselori.jpeg"
     bg_image = Image.open(bg_image_path)
     bg_image = bg_image.resize((800,500),Image.LANCZOS)
     bg_read = ImageTk.PhotoImage(bg_image)
@@ -162,13 +163,19 @@ def save_data():
     with open("events.dat", "wb") as f:
         pickle.dump(events,f)
 
+def stop():
+    pygame.mixer.music.stop()
 
 app=Tk()
 app.title("Event Management System")
 app.geometry("535x545")
 app.resizable(False,False)
 
-bg_image = Image.open ("C:\GAMBAR WALLPAPER GUI PYTHON\Screenshot 2024-06-27 230131.png")
+pygame.mixer.init()
+pygame.mixer.music.load("c:\\Users\\Hakim\\Downloads\\song.mp3")
+pygame.mixer.music.play(loops=0)
+
+bg_image = Image.open ("c:\\Users\\Hakim\\Documents\\canselori.jpeg")
 bg_image = bg_image.resize((530,540),Image.LANCZOS)
 bg_photo = ImageTk.PhotoImage(bg_image)
 
@@ -196,16 +203,13 @@ location_options = ["Dewan Ilmu", "Canselori", "Library", "Cafeteria", "Dewan Ku
                     "Dewan Kuliah 3", "Dewan Kuliah 4", "Dewan Kuliah 5", "Dewan Kuliah 6", "Dewan Kuliah 7", 
                     "Dewan Kuliah 8", "Dewan Kuliah 9", "Sports Complex", "Computer Lab", "Science Lab", 
                     "Administration Office", "Student Center"]
+
 label_other_location = ttk.Label(app, text="Enter Location:")
 entry_other_location = ttk.Entry(app, width=47)
 date_entry = Entry(app, width=50)
 date_entry.grid(row=3, column=1, padx=10, pady=5)
 
-
 location_options.append("Other Location")
-
-label_location = ttk.Label(app, text="Select Location:")
-label_location.grid(row=4, column=0, padx=10, pady=5, sticky='e')
 
 combobox_location = ttk.Combobox(app, values=location_options, width=47)
 combobox_location.grid(row=4, column=1, padx=10, pady=5)
@@ -228,6 +232,7 @@ appButton = Button(app, text="Clear",command=clearPushed,width=10).grid(row=7, c
 appButton = Button(app, text="Exit",command=exitPushed,width=10).grid(row=9, column=2, padx=10, pady=5)
 appButton = Button(app, text="Delete", command=delete_event, width=10).grid(row=9, column=0, padx=10, pady=5)
 appButton = Button(app, text="Read",command=Read_event,width=10).grid(row=9, column=1, padx=10, pady=5)
+appButton = Button(app, text="Stop Song",command=stop,width=10).grid(row=10, column=2, padx=10, pady=5)
 
 event_listbox = Listbox(app, width=60, height=13)
 event_listbox.grid(row=8, column=0, columnspan=3, padx=10, pady=10)
@@ -240,3 +245,4 @@ for event in events:
     event_listbox.insert(END, event)
 
 app.mainloop()
+
