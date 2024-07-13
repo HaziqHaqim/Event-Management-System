@@ -168,15 +168,17 @@ def stop():
 
 app=Tk()
 app.title("Event Management System")
-app.geometry("535x545")
+app.geometry("550x575")
 app.resizable(False,False)
 
+app.iconbitmap(r"c:\\Users\\Hakim\\Downloads\\195927.ico")
+
 pygame.mixer.init()
-pygame.mixer.music.load("c:\\Users\\Hakim\\Downloads\\song.mp3")
-pygame.mixer.music.play(loops=0)
+pygame.mixer.music.load("c:\\Users\\Hakim\\Downloads\\unimap song.mp3")
+pygame.mixer.music.play(loops=-1)
 
 bg_image = Image.open ("c:\\Users\\Hakim\\Documents\\canselori.jpeg")
-bg_image = bg_image.resize((530,540),Image.LANCZOS)
+bg_image = bg_image.resize((550,575),Image.LANCZOS)
 bg_photo = ImageTk.PhotoImage(bg_image)
 
 bg_label = Label(app, image=bg_photo)
@@ -205,7 +207,13 @@ location_options = ["Dewan Ilmu", "Canselori", "Library", "Cafeteria", "Dewan Ku
                     "Administration Office", "Student Center"]
 
 label_other_location = ttk.Label(app, text="Enter Location:")
+<<<<<<< HEAD
 entry_other_location = ttk.Entry(app, width=47)
+=======
+entry_other_location = ttk.Entry(app, width=50)
+date_entry = Entry(app, width=50)
+date_entry.grid(row=3, column=1, padx=10, pady=5)
+>>>>>>> 003a2c2a35942703cf7fd9369de5bae07c84a09e
 
 location_options.append("Other Location")
 
@@ -230,7 +238,7 @@ appButton = Button(app, text="Clear",command=clearPushed,width=10).grid(row=7, c
 appButton = Button(app, text="Exit",command=exitPushed,width=10).grid(row=9, column=2, padx=10, pady=5)
 appButton = Button(app, text="Delete", command=delete_event, width=10).grid(row=9, column=0, padx=10, pady=5)
 appButton = Button(app, text="Read",command=Read_event,width=10).grid(row=9, column=1, padx=10, pady=5)
-appButton = Button(app, text="Stop Song",command=stop,width=10).grid(row=10, column=2, padx=10, pady=5)
+appButton = Button(app, text="Stop Song",command=stop,width=10).grid(row=12, column=1, padx=10, pady=5)
 
 event_listbox = Listbox(app, width=60, height=13)
 event_listbox.grid(row=8, column=0, columnspan=3, padx=10, pady=10)
