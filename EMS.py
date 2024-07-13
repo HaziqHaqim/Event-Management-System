@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
+from tkcalendar import DateEntry
 import pygame
 
 def exitPushed():
@@ -84,8 +85,7 @@ def onSelect(event):
         phone_entry.delete(0, END)
         phone_entry.insert(0, phone)
         
-        date_entry.delete(0, END)
-        date_entry.insert(0, date)
+        date_entry.set_date(date)
 
         if location in location_options:
             combobox_location.set(location)
@@ -195,7 +195,7 @@ phone_entry = Entry(app, width=50)
 phone_entry.grid(row=2, column=1, padx=10, pady=5)
 
 Label(app, text="Date:").grid(row=3, column=0, padx=10, pady=5)
-date_entry = Entry(app, width=50)
+date_entry = DateEntry(app, width=47, date_pattern='y-mm-dd')
 date_entry.grid(row=3, column=1, padx=10, pady=5)
 
 Label(app, text="Location:").grid(row=4, column=0, padx=10, pady=5)
@@ -206,8 +206,6 @@ location_options = ["Dewan Ilmu", "Canselori", "Library", "Cafeteria", "Dewan Ku
 
 label_other_location = ttk.Label(app, text="Enter Location:")
 entry_other_location = ttk.Entry(app, width=47)
-date_entry = Entry(app, width=50)
-date_entry.grid(row=3, column=1, padx=10, pady=5)
 
 location_options.append("Other Location")
 
