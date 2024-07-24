@@ -13,7 +13,7 @@ def exitPushed():
 
 def createPushed():
     name = name_entry.get()
-    phone =phone_entry.get()
+    phone = phone_entry.get()
     date = date_entry.get() 
     location = combobox_location.get() if entry_other_location.winfo_ismapped() == 0 else entry_other_location.get()
     info = info_entry.get()
