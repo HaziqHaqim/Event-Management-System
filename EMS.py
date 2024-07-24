@@ -4,6 +4,7 @@ from tkinter import messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
 from tkcalendar import DateEntry
+from datetime import date
 import pygame
 
 def exitPushed():
@@ -12,13 +13,16 @@ def exitPushed():
 
 def createPushed():
     name = name_entry.get()
-    phone = phone_entry.get()
+    phone =phone_entry.get()
     date = date_entry.get() 
     location = combobox_location.get() if entry_other_location.winfo_ismapped() == 0 else entry_other_location.get()
     info = info_entry.get()
 
     if not all([name, phone, date, location, info]):
         messagebox.showwarning("Error", "All fields are required")
+        return
+    if not phone.isdigit():
+        messagebox.showerror("Input Error", "Please input numbers only for the phone field")
         return
     
     event_info = f"{name} - {phone} - {date} - {location} - {info}"
@@ -29,9 +33,11 @@ def createPushed():
 def clearPushed():
     name_entry.delete(0, END)
     phone_entry.delete(0, END)
-    date_entry.delete(0, END)
+    date_entry.set_date(date.today())
     combobox_location.set("")
     entry_other_location.delete(0, END)
+    entry_other_location.grid_remove()
+    label_other_location.grid_remove()
     info_entry.delete(0,END)
 
 def update_event():
@@ -48,6 +54,9 @@ def update_event():
 
     if not all([name, phone, date, location, info]):
         messagebox.showerror("Input Error", "All fields are required")
+        return
+    if not phone.isdigit():
+        messagebox.showerror("Input Error", "Please input numbers only for the phone field")
         return
     
     updated_event_info = f"{name} - {phone} - {date} - {location} - {info}"
@@ -74,7 +83,6 @@ def onSelect(event):
         if len(parts) == 5:
             name, phone, date, location, info = parts
         else:
-            # Handle case where there might be extra '-' in event info
             name, phone, date, *location_parts = parts[:-2]
             location = '-'.join(location_parts)
             info = parts[-1]
@@ -102,22 +110,58 @@ def onSelect(event):
         info_entry.delete(0, END)
         info_entry.insert(0, info)
 
+
 def on_location_selected(event):
     selected_location = combobox_location.get()
     if selected_location == "Other Location":
-        label_other_location.grid(row=5, column=0, padx=10, pady=5, sticky='e')
-        entry_other_location.grid(row=5, column=1, padx=10, pady=5, sticky='w')
+        label_other_location.grid(row=6, column=0, padx=10, pady=5, sticky='e')
+        entry_other_location.grid(row=6, column=1, padx=10, pady=5, sticky='w')
+    
     else:
-        label_other_location.grid_remove()
+        label_other_location.grid_remove() 
         entry_other_location.grid_remove()
+
+def manual():
+    userManual=Toplevel(app)
+    userManual.title('User Manual')
+    userManual.geometry("730x400")
+    userManual.resizable(False,False)
+    userManual.iconbitmap(r"c:\\Users\\Hakim\\Downloads\\195927.ico")
+
+    bg_image_path = "c:\\Users\\Hakim\\Documents\\canselori.jpeg"
+    bg_image = Image.open(bg_image_path)
+    bg_image = bg_image.resize((1000,500),Image.LANCZOS)
+    bg_read = ImageTk.PhotoImage(bg_image)
+
+    bg_label_read = Label(userManual, image=bg_read)
+    bg_label_read.place(x=0, y=0, relwidth=1, relheight=1)
+    bg_label_read.image = bg_read
+
+    table_title = Label(userManual,text="**Make sure to state the correct information before proceeding**", font=("Bahnschrift SemiBold SemiConden", 16), bg="gold")
+    table_title.grid(row=0, column=0, padx=10, pady= 10, sticky='n')
+    table_title = Label(userManual,text="1. Fill in all the entry boxes then push (Create) button", font=("Bahnschrift SemiBold SemiConden", 12), bg="blue4", fg="white")
+    table_title.grid(row=1, column=0, padx=10, pady= 10, sticky='w')
+    table_title = Label(userManual,text="2. If you want to see more details about the information, click the (Read) button", font=("Bahnschrift SemiBold SemiConden", 12), bg="blue4", fg="white")
+    table_title.grid(row=2, column=0, padx=10, pady= 10, sticky='w')
+    table_title = Label(userManual,text="3. If you see any errors, you can update the information by selecting the appropriate item from the listbox\nand entering the correct information.",justify="left", font=("Bahnschrift SemiBold SemiConden", 12), bg="blue4", fg="white")
+    table_title.grid(row=3, column=0, padx=10, pady= 10, sticky='w')
+    table_title = Label(userManual,text="4. After correcting the problem, click the (Update) button", font=("Bahnschrift SemiBold SemiConden", 12), bg="blue4", fg="white")
+    table_title.grid(row=4, column=0, padx=10, pady= 10, sticky='w')
+    table_title = Label(userManual,text="5. To delete information, select the appropriate item from the listbox, then click the (Delete) button.", font=("Bahnschrift SemiBold SemiConden", 12), bg="red", fg="white")
+    table_title.grid(row=5, column=0, padx=10, pady= 10, sticky='w')
+    table_title = Label(userManual,text="6. Once you’re done, click the (Exit) button to save your information. Your data will be saved automatically", font=("Bahnschrift SemiBold SemiConden", 12), bg="blue4", fg="white")
+    table_title.grid(row=6, column=0, padx=10, pady= 10, sticky='w')
 
 def Read_event():
     read_window = Toplevel(app)
     read_window.title('Listed Data')
     read_window.geometry("700x400")
-    read_window.config(bg="lightblue")
     read_window.resizable(False,False)
+    read_window.iconbitmap(r"c:\\Users\\Hakim\\Downloads\\195927.ico")
 
+    style = ttk.Style()
+    style.configure("Treeview.Heading", foreground="blue4", font=("Bahnschrift SemiBold SemiConden", 10))
+    
     bg_image_path = "c:\\Users\\Hakim\\Documents\\canselori.jpeg"
     bg_image = Image.open(bg_image_path)
     bg_image = bg_image.resize((800,500),Image.LANCZOS)
@@ -127,10 +171,14 @@ def Read_event():
     bg_label_read.place(x=0, y=0, relwidth=1, relheight=1)
     bg_label_read.image = bg_read
 
-    table_title = Label(read_window,text="INFORMATION",font=("Cooper Black", 16))
+    table_title = Label(read_window,text="INFORMATION",font=("Cooper Black", 16), bg="gold")
     table_title.grid(row=0, column=0, padx=10, pady= 10)
-    table_title = Label(read_window,text="Check your information and if there has any error information, you can update later :)",font=("Arial Black", 10))
+    table_title = Label(read_window,text="Check your information, and if there is any incorrect information, you can update it later.",
+                        font=("Bahnschrift SemiBold SemiConden", 11), bg="blue4", fg="white")
     table_title.grid(row=2, column=0, padx=0, pady= 0)
+    table_title = Label(read_window,text="Contact us : 666-666-666-666",
+                        font=("Bahnschrift SemiBold SemiConden", 11), bg="blue4", fg="white")
+    table_title.grid(row=3, column=0, padx=0, pady= 0)    
 
     table = ttk.Treeview(read_window,columns=('name','phone','date','location','info'), show= 'headings')
     table.heading('name', text= 'Name')
@@ -138,18 +186,22 @@ def Read_event():
     table.heading('date', text= 'Date')
     table.heading('location', text= 'Location')
     table.heading('info', text= 'Info')
-    table.column('name',width=120)
-    table.column('phone',width=120)
-    table.column('date',width=120)
-    table.column('location',width=120)
-    table.column('info',width=220)
+    table.column('name',width=150)
+    table.column('phone',width=80)
+    table.column('date',width=80)
+    table.column('location',width=155)
+    table.column('info',width=240)
     
     table.grid(row=1, column=0, padx=0, pady= 30)
+    table.tag_configure("even", foreground= "blue4", background="gold", font=("Bahnschrift SemiBold SemiConden", 10))
+    table.tag_configure("odd", foreground= "gold", background="blue4", font=("Bahnschrift SemiBold SemiConden", 10))
 
     for index in range(event_listbox.size()):
         event = event_listbox.get(index)
         name, phone, date, location, info = event.split(" - ")
-        table.insert('', END, values=(name.strip(), phone.strip(), date.strip(), location.strip(), info.strip()))   
+        tag = 'even' if index % 2 == 0 else 'odd'
+        table.insert('', END, values=(name.strip(), phone.strip(), date.strip(), location.strip(), info.strip()), tags=(tag,))
+           
 
 def load_data():
     try:
@@ -168,7 +220,7 @@ def stop():
 
 app=Tk()
 app.title("Event Management System")
-app.geometry("550x575")
+app.geometry("570x570")
 app.resizable(False,False)
 
 app.iconbitmap(r"c:\\Users\\Hakim\\Downloads\\195927.ico")
@@ -178,75 +230,70 @@ pygame.mixer.music.load("c:\\Users\\Hakim\\Downloads\\unimap song.mp3")
 pygame.mixer.music.play(loops=-1)
 
 bg_image = Image.open ("c:\\Users\\Hakim\\Documents\\canselori.jpeg")
-bg_image = bg_image.resize((550,575),Image.LANCZOS)
+bg_image = bg_image.resize((570,570),Image.LANCZOS)
 bg_photo = ImageTk.PhotoImage(bg_image)
 
 bg_label = Label(app, image=bg_photo)
 bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 bg_label.image = bg_photo
 
-appLabel = Label(app,text="UniMap Event Booking",font=("Cooper Black", 16))
+appLabel = Label(app,text="UniMap Event Booking",font=("Cooper Black", 16), bg="gold")
 appLabel.grid(row=0, column=1, columnspan=1, padx=10, pady=10)
 
-Label(app, text="Name:").grid(row=1, column=0, padx=10, pady=5)
-name_entry = Entry(app, width=50)
+Label(app, text="Name:", bg="gold" , fg="black", font=("Bahnschrift SemiBold SemiConden", 10)).grid(row=1, column=0, padx=10, pady=5, sticky='e')
+name_entry = Entry(app, width=60, font=("Bahnschrift SemiBold SemiConden", 10), bg="gold")
 name_entry.grid(row=1, column=1, padx=10, pady=5)
 
-Label(app, text="Phone:").grid(row=2, column=0, padx=10, pady=5)
-phone_entry = Entry(app, width=50)
+Label(app, text="Phone:", bg="gold" , fg="black", font=("Bahnschrift SemiBold SemiConden", 10)).grid(row=2, column=0, padx=10, pady=5, sticky='e')
+phone_entry = Entry(app, width=60, font=("Bahnschrift SemiBold SemiConden", 10), bg="gold")
 phone_entry.grid(row=2, column=1, padx=10, pady=5)
 
-Label(app, text="Date:").grid(row=3, column=0, padx=10, pady=5)
-date_entry = DateEntry(app, width=47, date_pattern='y-mm-dd')
-date_entry.grid(row=3, column=1, padx=10, pady=5)
+Label(app, text="Event Info:", bg="gold" , fg="black", font=("Bahnschrift SemiBold SemiConden", 10)).grid(row=3, column=0, padx=10, pady=5, sticky='e')
+info_entry = Entry(app, width=60, font=("Bahnschrift SemiBold SemiConden", 10), bg="gold")
+info_entry.grid(row=3, column=1, padx=10, pady=5)
 
-Label(app, text="Location:").grid(row=4, column=0, padx=10, pady=5)
+Label(app, text="Date:", bg="gold" , fg="black", font=("Bahnschrift SemiBold SemiConden", 10)).grid(row=4, column=0, padx=10, pady=5, sticky='e')
+date_entry = DateEntry(app, width=57, date_pattern='y-mm-dd', font=("Bahnschrift SemiBold SemiConden", 10), background='gold', foreground='blue4', borderwidth=2)
+date_entry.grid(row=4, column=1, padx=10, pady=5)
+
+Label(app, text="Location:", bg="gold" , fg="black", font=("Bahnschrift SemiBold SemiConden", 10)).grid(row=5, column=0, padx=10, pady=5, sticky='e')
 location_options = ["Dewan Ilmu", "Canselori", "Library", "Cafeteria", "Dewan Kuliah 1", "Dewan Kuliah 2", 
                     "Dewan Kuliah 3", "Dewan Kuliah 4", "Dewan Kuliah 5", "Dewan Kuliah 6", "Dewan Kuliah 7", 
                     "Dewan Kuliah 8", "Dewan Kuliah 9", "Sports Complex", "Computer Lab", "Science Lab", 
                     "Administration Office", "Student Center"]
 
-label_other_location = ttk.Label(app, text="Enter Location:")
-<<<<<<< HEAD
-entry_other_location = ttk.Entry(app, width=47)
-=======
-entry_other_location = ttk.Entry(app, width=50)
-date_entry = Entry(app, width=50)
-date_entry.grid(row=3, column=1, padx=10, pady=5)
->>>>>>> 003a2c2a35942703cf7fd9369de5bae07c84a09e
-
-location_options.append("Other Location")
-
-combobox_location = ttk.Combobox(app, values=location_options, width=47)
-combobox_location.grid(row=4, column=1, padx=10, pady=5)
-combobox_location.bind("<<ComboboxSelected>>", on_location_selected)
-label_other_location.grid(row=5, column=0, padx=10, pady=5, sticky='e')
-entry_other_location.grid(row=5, column=1, padx=10, pady=5, sticky='w')
+label_other_location = ttk.Label(app, text="Other:", font=("Bahnschrift SemiBold SemiConden", 10), background="gold")
+entry_other_location = ttk.Entry(app, width=60, font=("Bahnschrift SemiBold SemiConden", 10))
+label_other_location.grid(row=6, column=0, padx=10, pady=5, sticky='e')
+entry_other_location.grid(row=6, column=1, padx=10, pady=5)
 label_other_location.grid_remove()
 entry_other_location.grid_remove()
 
-Label(app, text="Event Info:").grid(row=6, column=0, padx=10, pady=5)
-info_entry = Entry(app, width=50)
-info_entry.grid(row=6, column=1, padx=10, pady=5)
+location_options.append("Other Location")
+
+combobox_location = ttk.Combobox(app, values=location_options, width=57)
+combobox_location.grid(row=5, column=1, padx=10, pady=5, sticky='e')
+combobox_location.bind("<<ComboboxSelected>>", on_location_selected)
 
 buttonFrame = Frame(app)
 buttonFrame.grid(row=1, column=1, columnspan=3, pady=10)
 
-appButton = Button(app, text="Create",command=createPushed, width=10).grid(row=7, column=0, padx=10, pady=5)
-appButton = Button(app, text="Update",command=update_event, width=10).grid(row=7, column=1, padx=10, pady=5)
-appButton = Button(app, text="Clear",command=clearPushed,width=10).grid(row=7, column=2, padx=10, pady=5)
-appButton = Button(app, text="Exit",command=exitPushed,width=10).grid(row=9, column=2, padx=10, pady=5)
-appButton = Button(app, text="Delete", command=delete_event, width=10).grid(row=9, column=0, padx=10, pady=5)
-appButton = Button(app, text="Read",command=Read_event,width=10).grid(row=9, column=1, padx=10, pady=5)
-appButton = Button(app, text="Stop Song",command=stop,width=10).grid(row=12, column=1, padx=10, pady=5)
+appButton = Button(app, text="Create",command=createPushed, width=10, font=("Bahnschrift SemiBold SemiConden", 10), bg="blue4", fg="white").grid(row=7, column=0, padx=10, pady=5)
+appButton = Button(app, text="Update",command=update_event, width=10, font=("Bahnschrift SemiBold SemiConden", 10), bg="blue4", fg="white").grid(row=7, column=1, padx=10, pady=5)
+appButton = Button(app, text="Clear",command=clearPushed,width=10, font=("Bahnschrift SemiBold SemiConden", 10), bg="blue4", fg="white").grid(row=7, column=2, padx=10, pady=5)
+appButton = Button(app, text="Exit",command=exitPushed,width=10, font=("Bahnschrift SemiBold SemiConden", 10), bg="blue4", fg="white").grid(row=9, column=2, padx=10, pady=5)
+appButton = Button(app, text="Delete", command=delete_event, width=10, font=("Bahnschrift SemiBold SemiConden", 10), bg="blue4", fg="white").grid(row=9, column=0, padx=10, pady=5)
+appButton = Button(app, text="Read",command=Read_event,width=10, font=("Bahnschrift SemiBold SemiConden", 10), bg="blue4", fg="white").grid(row=9, column=1, padx=10, pady=5)
+appButton = Button(app, text="Stop Song",command=stop,width=10, font=("Bahnschrift SemiBold SemiConden", 10), bg="blue4", fg="white").grid(row=10, column=0, padx=10, pady=5)
+appButton = Button(app, text="User Manual",command=manual,width=10, font=("Bahnschrift SemiBold SemiConden", 10), bg="blue4", fg="white").grid(row=10, column=2, padx=10, pady=5)
 
-event_listbox = Listbox(app, width=60, height=13)
+event_listbox = Listbox(app, width=60, height=11, font=("Bahnschrift SemiBold SemiConden", 10))
 event_listbox.grid(row=8, column=0, columnspan=3, padx=10, pady=10)
 event_listbox.bind('<<ListboxSelect>>', onSelect)
-event_listbox.config(bg="lightskyblue3")
+event_listbox.config(bg="blue4", fg="white")
 
 load_data()
-
+ 
 for event in events:
     event_listbox.insert(END, event)
 
